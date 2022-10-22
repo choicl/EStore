@@ -1,4 +1,5 @@
 using API.Data;
+using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -42,7 +45,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors(opt =>
 {
-    opt.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000","http://localhost:3001","https://localhost:3000","https://localhost:3001");
 });
 
 app.UseAuthorization();
